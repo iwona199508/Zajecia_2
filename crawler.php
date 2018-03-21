@@ -11,26 +11,38 @@
 <?php
  $url =  $_GET['search'];
 
- //echo $url;
+error_reporting(E_ERROR | E_PARSE);
 
  if (filter_var($url, FILTER_VALIDATE_URL)) {
     echo("$url is a valid URL");
+	echo "</br>";
 } else {
     echo("$url is not a valid URL");
+	echo "</br>";
 }
 
-$doc = new DOMDocument();
-$doc->loadHTMLFile("$url");
-//echo $doc->saveHTML();
-$tags = $doc->getElementsByTagName('a');
+// $doc = new DOMDocument();
+// $doc->loadHTMLFile("$url");
+// $tags = $doc->getElementsByTagName('a');
 
-//echo $tags;
-foreach ($tags as $tag) {
-    echo $tag->nodeValue, PHP_EOL;
-	$urls = $tag.getAtribute('href');
-	echo $urls;
+	function get_links($url) {
+    $xml = new DOMDocument();
+    $xml->loadHTMLFile($url);
+    $links = array();
+
+    foreach($xml->getElementsByTagName('a') as $link) {
+        $links[] = $link->getAttribute('href');  
+    }
+	
+    return $links;
+} 
+
+$links = get_links($url);
+foreach($links as $link){
+	print_r($link);
 }
-?>
+
+ ?>
 
 </body>
 </html> 
